@@ -105,7 +105,7 @@ const generateNewChallenge = async () => {
     setUserPrompt("");
 
     const response = await fetch(
-      "http://localhost:5000/api/generate-challenge",
+      "https://ai-prompt-coding-api.onrender.com/api/generate-challenge",
       {
         method: "POST",
         headers: {
@@ -141,7 +141,7 @@ const currentUserId = savedUser
 
 if (currentUserId) {
   const sessionResponse = await fetch(
-    "http://localhost:5000/api/test-session",
+    "https://ai-prompt-coding-api.onrender.com/api/test-session",
     {
       method: "POST",
       headers: {
@@ -178,7 +178,7 @@ const loadUserStats = async () => {
 
   try {
     const response = await fetch(
-      `http://localhost:5000/api/user-stats/${userId}`
+      `https://ai-prompt-coding-api.onrender.com/api/user-stats/${userId}`
     );
 
     const data = await response.json();
@@ -195,7 +195,7 @@ const loadUserStats = async () => {
 const restoreLatestChallenge = async (currentUserId) => {
   try {
     const response = await fetch(
-      `http://localhost:5000/api/latest-session/${currentUserId}`
+      `https://ai-prompt-coding-api.onrender.com/api/latest-session/${currentUserId}`
     );
 
     const data = await response.json();
@@ -237,7 +237,7 @@ const restoreLatestChallenge = async (currentUserId) => {
     try {
       setIsEvaluating(true);
       setPromptEvaluation(null);
-      const response = await fetch("http://localhost:5000/api/test-prompt", {
+      const response = await fetch("https://ai-prompt-coding-api.onrender.com/api/test-prompt", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -283,7 +283,7 @@ const restoreLatestChallenge = async (currentUserId) => {
       return;
     }
     try {
-      const response = await fetch("http://localhost:5000/api/generate-code", {
+      const response = await fetch("https://ai-prompt-coding-api.onrender.com/api/generate-code", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -320,7 +320,7 @@ const restoreLatestChallenge = async (currentUserId) => {
     try {
       setIsRunning(true);
       setOutput("Running code...");
-      const response = await fetch("http://localhost:5000/api/run-code", {
+      const response = await fetch("https://ai-prompt-coding-api.onrender.com/api/run-code", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -362,7 +362,7 @@ const restoreLatestChallenge = async (currentUserId) => {
       setIsTesting(true);
       setTestResults(null);
       setOutput("Running public tests...");
-      const response = await fetch("http://localhost:5000/api/run-tests", {
+      const response = await fetch("https://ai-prompt-coding-api.onrender.com/api/run-tests", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -400,7 +400,7 @@ const restoreLatestChallenge = async (currentUserId) => {
       setIsSubmitting(true);
       setSubmissionResult(null);
       setOutput("Submitting code and running hidden tests...");
-      const response = await fetch("http://localhost:5000/api/submit-code", {
+      const response = await fetch("https://ai-prompt-coding-api.onrender.com/api/submit-code", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
