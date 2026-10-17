@@ -23,18 +23,8 @@ const userSchema = new mongoose.Schema(
         },
 
         // User's currently available tokens
-        tokens: {
-            type: Number,
-            default: 5000,
-            min: 0
-        },
-
-        // Maximum free tokens available per day
-        dailyTokenLimit: {
-            type: Number,
-            default: 5000,
-            min: 0
-        },
+        tokens: { type: Number, default: 10000, min: 0 },
+dailyTokenLimit: { type: Number, default: 10000, min: 0 },
 
         // Tracks the last daily token refill
         lastTokenRefill: {

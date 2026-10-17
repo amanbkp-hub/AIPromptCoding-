@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import CodeEditor from "./components/CodeEditor";
 import Auth from "./Auth";
 function App() {
@@ -191,6 +191,43 @@ const loadUserStats = async () => {
   }
 };
 
+
+const restoreLatestChallenge = async (currentUserId) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/latest-session/${currentUserId}`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.session) {
+      console.log("No previous challenge found.");
+      return;
+    }
+
+    const savedSession = data.session;
+    const savedChallenge = savedSession.challenge;
+
+    setSessionId(savedSession._id);
+    setUserId(currentUserId);
+    setChallengeId(savedChallenge._id);
+
+    setChallenge({
+      ...savedChallenge,
+      examples: savedChallenge.examples || [],
+      constraints: savedChallenge.constraints || [],
+    });
+
+    setCode(savedSession.generatedCode || "");
+    setUserPrompt("");
+    setPromptEvaluation(null);
+    setTestResults(null);
+    setSubmissionResult(null);
+    setOutput("");
+  } catch (error) {
+    console.error("Failed to restore latest challenge:", error);
+  }
+};
 
   const evaluatePrompt = async () => {
     if (!userPrompt.trim()) {
@@ -392,16 +429,28 @@ const loadUserStats = async () => {
       setIsSubmitting(false);
     }
   };
+
+  
+useEffect(() => {
+  if (loggedInUser?.user?.id) {
+    restoreLatestChallenge(loggedInUser.user.id);
+  }
+}, [loggedInUser]);
+
   if (!loggedInUser) {
   return (
     <Auth
-      onLogin={(data) => {
+     
+onLogin={async (data) => {
   setLoggedInUser(data);
   localStorage.setItem("loggedInUser", JSON.stringify(data));
   localStorage.setItem("authToken", data.token);
   setUserId(data.user.id);
   setTokens(data.user.tokens);
+
+  
 }}
+
     />
   );
 }
@@ -459,30 +508,7 @@ const loadUserStats = async () => {
             </p>
             
 {/* Progress Dashboard */}
-<div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-  <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
-    <p className="text-slate-400 text-sm">Total Challenges</p>
-    <h3 className="text-3xl font-bold mt-2">
-      {userStats.totalChallenges}
-    </h3>
-  </div>
 
-  <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
-    <p className="text-slate-400 text-sm">Challenges Solved</p>
-    <h3 className="text-3xl font-bold mt-2">
-      {userStats.totalSolved}
-    </h3>
-  </div>
-
-  
-
-  <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
-    <p className="text-slate-400 text-sm">Current Tokens</p>
-    <h3 className="text-3xl font-bold mt-2">
-      {tokens}
-    </h3>
-  </div>
-</div>
 
             {/* Start Challenge */}
             <div className="mt-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8">
